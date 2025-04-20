@@ -1,7 +1,7 @@
 const express = require("express");
 const cors = require("cors");
 const app = express();
-
+const mongoose = require("mongoose");
 const Joi = require("joi");
 const multer = require("multer");
 
@@ -44,7 +44,7 @@ app.post("/api/cats", upload.single("img"), (req, res) => {
   };
 
   if (req.file) {
-    cat.img_name = "images/" + req.file.filename;
+    cat.img_name = "./public/images/" + req.file.filename;
   }
 
   cats.push(cat);
