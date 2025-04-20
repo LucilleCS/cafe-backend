@@ -67,6 +67,34 @@ app.post("/api/cats", upload.single("img"), (req, res) => {
   res.status(200).send(cat);
 });
 
+app.put("/api/cats/:id", upload.single("img"), (req, res) => {
+  const cat = cats.find((cat) => cat._id === parseInt(req.params.id));
+
+  if (!cat) {
+    res.status(404).send("The cat with the provided id was not found");
+    return;
+  }
+
+  const result = validateCat(req.body);
+
+  if (result.error) {
+    res.status(400).send(result.error.details[0].message);
+    return;
+  }
+
+  cat.name = req.body.name;
+  cat.age = req.body.age;
+  cat.gender = req.body.gender;
+  cat.personality = req.body.personality;
+  cat.favorite_activity = req.body.activity;
+
+  if (req.file) {
+    cat.img_name = "./public/images/" + req.file.filename;
+  }
+
+  res.status(200).send(cat);
+});
+
 const cats = [
   {
     _id: 1,
