@@ -79,6 +79,7 @@ app.put("/api/cats/:id", upload.single("img"), (req, res) => {
 
   if (result.error) {
     res.status(400).send(result.error.details[0].message);
+    console.log("not found");
     return;
   }
 
@@ -94,6 +95,30 @@ app.put("/api/cats/:id", upload.single("img"), (req, res) => {
 
   res.status(200).send(cat);
 });
+
+app.delete("/api/cats/:id", (req, res) => {
+  console.log("I'm trying to delete " + req.params.id);
+
+  // Find the cat by ID
+  const cat = cats.find((cat) => cat._id === parseInt(req.params.id));
+
+  if (!cat) {
+    console.log("Oh no, I wasn't found");
+    res.status(404).send("The cat with the provided id was not found");
+    return;
+  }
+
+  console.log("YAY! You found me");
+  console.log("The cat you are deleting is " + cat.name);
+
+  // Remove the cat from the array
+  const index = cats.indexOf(cat);
+  cats.splice(index, 1);
+
+  // Send the deleted cat as a response
+  res.status(200).send(cat);
+});
+
 
 const cats = [
   {
