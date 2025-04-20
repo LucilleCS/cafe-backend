@@ -11,6 +11,21 @@ app.use("/uploads", express.static("uploads"));
 app.use(express.json());
 app.use(cors());
 
+mongoose
+  .connect(
+    "mongodb+srv://LucilleCS:password720360@cafedata.r5zimi1.mongodb.net/cafeDB"
+  )
+  .then(() => {
+    console.log("connected to mongodb");
+  })
+  .catch((error) => {
+    console.log("couldn't connect to mongodb", error);
+  });
+
+const schema = new mongoose.Schema({
+  name: String,
+});
+
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
     cb(null, "./public/images");
