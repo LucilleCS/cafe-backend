@@ -18,7 +18,6 @@ mongoose
   .then(() => console.log("Connected to MongoDB"))
   .catch((err) => console.log("Couldn't connect to MongoDB", err));
 
-// Schema & Model
 const catSchema = new mongoose.Schema({
   name: String,
   age: String,
@@ -30,7 +29,6 @@ const catSchema = new mongoose.Schema({
 
 const Cat = mongoose.model("Cat", catSchema);
 
-// Multer for image uploads
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
     cb(null, "./public/images");
@@ -42,25 +40,22 @@ const storage = multer.diskStorage({
 
 const upload = multer({ storage: storage });
 
-// Routes
 app.get("/", (req, res) => {
   res.sendFile(__dirname + "/public/index.html");
 });
 
-// GET all cats
 app.get("/api/cats", async (req, res) => {
   const cats = await Cat.find();
+  console.log(cats);
   res.send(cats);
 });
 
-// GET one cat by ID
 app.get("/api/cats/:id", async (req, res) => {
   const cat = await Cat.findById(req.params.id);
   if (!cat) return res.status(404).send("Cat not found");
   res.send(cat);
 });
 
-// POST a new cat
 app.post("/api/cats", upload.single("img"), async (req, res) => {
   const result = validateCat(req.body);
 
@@ -81,7 +76,6 @@ app.post("/api/cats", upload.single("img"), async (req, res) => {
   res.status(200).send(newCat);
 });
 
-// PUT (update) a cat by ID
 app.put("/api/cats/:id", upload.single("img"), async (req, res) => {
   const result = validateCat(req.body);
 
@@ -109,7 +103,6 @@ app.put("/api/cats/:id", upload.single("img"), async (req, res) => {
   res.status(200).send(cat);
 });
 
-// DELETE a cat by ID
 app.delete("/api/cats/:id", async (req, res) => {
   const cat = await Cat.findByIdAndDelete(req.params.id);
 
@@ -117,7 +110,6 @@ app.delete("/api/cats/:id", async (req, res) => {
   res.status(200).send(cat);
 });
 
-// Joi validation
 function validateCat(cat) {
   const schema = Joi.object({
     name: Joi.string().required(),
