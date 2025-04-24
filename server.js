@@ -63,7 +63,7 @@ app.post("/api/cats", upload.single("img"), async (req, res) => {
     age: req.body.age,
     gender: req.body.gender,
     personality: req.body.personality,
-    favorite_activity: req.body.favorite_activity,
+    favorite_activity: req.body.activity,
     img: req.file ? "images/" + req.file.filename : null,
   });
 
@@ -80,7 +80,7 @@ app.put("/api/cats/:id", upload.single("img"), async (req, res) => {
     age: req.body.age,
     gender: req.body.gender,
     personality: req.body.personality,
-    favorite_activity: req.body.favorite_activity,
+    favorite_activity: req.body.activity,
   };
 
   if (req.file) {
