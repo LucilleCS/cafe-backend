@@ -9,7 +9,7 @@ const path = require("path");
 app.use(cors());
 app.use(express.json());
 app.use(express.static("public"));
-app.use("/uploads", express.static(path.join(__dirname, "public/images")));
+app.use("/uploads", express.static("uploads"));
 
 mongoose
   .connect(
@@ -31,7 +31,7 @@ const Cat = mongoose.model("Cat", catSchema);
 
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
-    cb(null, "./public/images");
+    cb(null, "./public/images/");
   },
   filename: (req, file, cb) => {
     cb(null, file.originalname);
@@ -41,7 +41,7 @@ const storage = multer.diskStorage({
 const upload = multer({ storage: storage });
 
 app.get("/", (req, res) => {
-  res.sendFile(__dirname + "/public/index.html");
+  res.sendFile(__dirname + "/index.html");
 });
 
 app.get("/api/cats", async (req, res) => {
@@ -69,7 +69,7 @@ app.post("/api/cats", upload.single("img"), async (req, res) => {
     gender: req.body.gender,
     personality: req.body.personality,
     favorite_activity: req.body.activity,
-    img_name: req.file ? req.file.filename : null,
+    img_name: req.file ? "images/" + req.file.filename : null,
   });
 
   const newCat = await cat.save();
@@ -92,7 +92,7 @@ app.put("/api/cats/:id", upload.single("img"), async (req, res) => {
   };
 
   if (req.file) {
-    updatedFields.img_name = req.file.filename;
+    updatedFields.img_name = "images/" + req.file.filename;
   }
 
   const cat = await Cat.findByIdAndUpdate(req.params.id, updatedFields, {
