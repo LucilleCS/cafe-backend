@@ -56,7 +56,7 @@ app.get("/api/cats/:id", async (req, res) => {
   res.send(cat);
 });
 
-app.post("/api/cats", upload.single("img"), async (req, res) => {
+app.post("/api/cats", upload.single("img_name"), async (req, res) => {
   const result = validateCat(req.body);
 
   if (result.error) {
@@ -76,7 +76,7 @@ app.post("/api/cats", upload.single("img"), async (req, res) => {
   res.status(200).send(newCat);
 });
 
-app.put("/api/cats/:id", upload.single("img"), async (req, res) => {
+app.put("/api/cats/:id", upload.single("img_name"), async (req, res) => {
   const result = validateCat(req.body);
 
   if (result.error) {
