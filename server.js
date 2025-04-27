@@ -53,11 +53,15 @@ app.get("/api/cats", async (req, res) => {
   res.send(allCats);
 });
 
-app.get("/api/cats/:id"),
-  async (req, res) => {
-    const catId = await MongooseCat.findOne({ _id: id });
+app.get("/api/cats/:id", async (req, res) => {
+  try {
+    const catId = await MongooseCat.findById(req.params.id);
+    if (!catId) return res.status(404).send("Cat not found");
     res.send(catId);
-  };
+  } catch (err) {
+    res.status(500).send("Error fetching cat by ID");
+  }
+});
 
 app.post("/api/cats", upload.single("img"), async (req, res) => {
   const result = validateCat(req.body);
@@ -119,7 +123,7 @@ const validateCat = (cat) => {
     gender: Joi.string().required(),
     personality: Joi.string().required(),
     activity: Joi.string().required(),
-    img: Joi.string().optional(),
+    img_name: Joi.string().optional(),
   });
 
   return schema.validate(cat);
